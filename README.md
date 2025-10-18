@@ -8,7 +8,7 @@ A lightweight **Python + AI** web app that helps you plan your day:
 - Track progress with **Done/Pending** + **daily streak**
 
 ## 🚀 Live Demo
-Add your Streamlit URL here after deploying (e.g., `https://yourname-focusmate-ai.streamlit.app/`)
+(https://focusmate-ai-xuug8vffnd39tnvk6rnapr.streamlit.app/)
 
 ## ✨ Screenshots
 /Assets/screenshot-1.jpg
