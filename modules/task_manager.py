@@ -67,3 +67,6 @@ def toggle_status(index_zero_based: int):
         )
         save_tasks(tasks)
  
+def mark_done(task):
+    task["status"] = "done"
+    task["completed_at"] = datetime.now().strftime("%H:%M")  # store completion time

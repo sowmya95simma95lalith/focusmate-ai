@@ -1,1 +1,19 @@
-[]
+[
+    {
+        "title": "finish eggs",
+        "priority": "medium",
+        "duration_min": 60,
+        "due_time": "16:41",
+        "status": "done",
+        "category": "Personal",
+        "completed_at": "16:40"
+    },
+    {
+        "title": "read book",
+        "priority": "high",
+        "duration_min": 60,
+        "due_time": "4:42",
+        "status": "pending",
+        "category": "Learning"
+    }
+]

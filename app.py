@@ -18,7 +18,7 @@ from modules.history import log_day
 from modules.history import get_streak_history
 import matplotlib.pyplot as plt
 import pandas as pd
-
+from datetime import datetime
 # --- Page config ---
 # st.set_page_config(page_title="FocusMate AI", page_icon="🤖", layout="centered")
 
@@ -72,6 +72,20 @@ if page == "Planner":
 
     # --- Task list ---
     tasks = get_tasks()
+    
+
+# --- Check overdue tasks ---
+    now = datetime.now().strftime("%H:%M")
+
+    overdue_tasks = [t for t in tasks if t.get("due_time") and t.get("status") == "pending" and t["due_time"] < now]
+
+    if overdue_tasks:
+        for t in overdue_tasks:
+            st.warning(f"⏰ Task overdue: **{t['title']}** (was due at {t['due_time']})")
+
+
+
+
     st.subheader("📋 Your Tasks")
     if not tasks:
         st.info("No tasks yet — add a few above.")
@@ -99,16 +113,31 @@ if page == "Planner":
             #     tasks[i]["status"] = "pending"
             #     save_tasks(tasks)
             #     st.rerun()
+            #########################################################
+            # if checked and t.get("status", "pending") != "done":
+            #     tasks[i]["status"] = "done"
+            #     save_tasks(tasks)
+            #     st.toast(f"✅ Task completed: {t['title']}", icon="🎉")   # 👈 Toast here
+            #     st.rerun()
+            # elif not checked and t.get("status", "pending") == "done":
+            #     tasks[i]["status"] = "pending"
+            #     save_tasks(tasks)
+            #     st.toast(f"↩️ Task reset to pending: {t['title']}", icon="↩️")   # 👈 Toast here
+            #     st.rerun()
+            ########################################################
             if checked and t.get("status", "pending") != "done":
                 tasks[i]["status"] = "done"
+                tasks[i]["completed_at"] = datetime.now().strftime("%H:%M")
                 save_tasks(tasks)
-                st.toast(f"✅ Task completed: {t['title']}", icon="🎉")   # 👈 Toast here
+                st.toast(f"✅ Task completed: {t['title']}", icon="🎉")
                 st.rerun()
             elif not checked and t.get("status", "pending") == "done":
                 tasks[i]["status"] = "pending"
+                tasks[i].pop("completed_at", None)  # remove timestamp
                 save_tasks(tasks)
-                st.toast(f"↩️ Task reset to pending: {t['title']}", icon="↩️")   # 👈 Toast here
+                st.toast(f"↩️ Task reset to pending: {t['title']}", icon="↩️")
                 st.rerun()
+
 
             # # Delete button
             # if cols[1].button("❌ Delete", key=f"del_{i}"):
@@ -254,3 +283,22 @@ if page == "Analytics":
             cat_time.plot(kind="bar", ax=ax, color="skyblue")
             ax.set_ylabel("Total Minutes")
             st.pyplot(fig)
+        # --- Productivity Metric ---
+        st.subheader("📈 Productivity")
+
+        on_time_done = 0
+        with_due_time = 0
+
+        for t in tasks:
+            if t.get("due_time"):
+                with_due_time += 1
+                if t.get("status") == "done" and t.get("completed_at"):
+                    if t["completed_at"] <= t["due_time"]:
+                        on_time_done += 1
+
+        if with_due_time > 0:
+            productivity = round((on_time_done / with_due_time) * 100, 1)
+            st.metric("On-Time Productivity", f"{productivity}%")
+        else:
+            st.info("No tasks with due times yet.")
+
