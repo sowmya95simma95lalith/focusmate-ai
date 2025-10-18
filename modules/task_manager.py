@@ -30,16 +30,15 @@ def save_tasks(tasks):
     with open(DATA_FILE, "w", encoding="utf-8") as f:
         json.dump(tasks, f, indent=4)
 
-def add_task(title, priority="medium", due_date=None, duration_min=60, due_time=None):
+def add_task(title, priority, duration_min=60, due_time=None, category="General"):
     tasks = load_tasks()
     task = {
         "title": title,
         "priority": priority,
-        "due_date": due_date,                 # keep for future
-        "due_time": due_time,                 # "HH:MM" or None
-        "duration_min": int(duration_min) if str(duration_min).isdigit() else 60,
-        "created_at": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "duration_min": duration_min,
+        "due_time": due_time,
         "status": "pending",
+        "category": category   # NEW FIELD
     }
     tasks.append(task)
     save_tasks(tasks)
