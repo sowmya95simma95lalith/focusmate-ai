@@ -1,6 +1,7 @@
 import os
 from openai import OpenAI
 from .task_manager import load_tasks
+from modules.db import get_tasks
 
 def _client_or_none():
     api = os.getenv("OPENAI_API_KEY")
@@ -8,10 +9,10 @@ def _client_or_none():
         return None
     return OpenAI(api_key=api)
 
-def generate_daily_plan():
-    tasks = load_tasks()
+def generate_daily_plan(username):
+    tasks = get_tasks(username)  # filter tasks per user
     if not tasks:
-        return "No tasks found. Add some tasks first!"
+        return "No tasks available to generate a plan."
 
     formatted_tasks = "\n".join(
         [f"- {t['title']} (priority: {t.get('priority','medium')})" for t in tasks]
