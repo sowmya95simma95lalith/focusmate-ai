@@ -1,7 +1,7 @@
 import os
 from pymongo import MongoClient
 from dotenv import load_dotenv
-
+import streamlit as st
 # Load environment variables from .env
 load_dotenv()
 
@@ -45,3 +45,10 @@ def delete_task(user, title):
 def clear_tasks(user):
     """Delete all tasks for a user."""
     tasks_collection.delete_many({"user": user})
+try:
+    st.sidebar.markdown("### 🔍 DB Debug Info")
+    st.sidebar.write("MONGO_URI loaded?", bool(os.getenv("MONGO_URI")))
+    st.sidebar.write("Connected DB:", db.name)
+    st.sidebar.write("Collections:", db.list_collection_names())
+except Exception as e:
+    st.sidebar.error(f"DB Debug Error: {e}")
