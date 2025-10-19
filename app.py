@@ -98,7 +98,7 @@ if page == "Planner":
             st.rerun()
 
         if colB.button("⚡ Generate Customized Daily Plan"):
-            plan = generate_daily_plan()
+            plan = generate_daily_plan(username)
             log_day()
             st.markdown("---")
             st.subheader("🗓️ Your Customized Plan")
